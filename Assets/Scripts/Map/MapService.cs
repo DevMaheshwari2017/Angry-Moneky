@@ -1,9 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using ServiceLocator.Utilities;
+using ServiceLocator.Main;
 using ServiceLocator.Player;
-using ServiceLocator.Events;
 
 namespace ServiceLocator.Map
 {
@@ -16,15 +15,15 @@ namespace ServiceLocator.Map
         private MapData currentMapData;
         private SpriteRenderer tileOverlay;
 
-        public MapService(MapScriptableObject mapScriptableObject) 
+        public MapService(MapScriptableObject mapScriptableObject)
         {
             this.mapScriptableObject = mapScriptableObject;
-            SubscribeToEvents();
             tileOverlay = Object.Instantiate(mapScriptableObject.TileOverlay).GetComponent<SpriteRenderer>();
             ResetTileOverlay();
+            SubscribeToEvents();
         }
 
-        private void SubscribeToEvents() => GameService.Instance.eventService.OnMapSelected.AddListener(LoadMap);
+        private void SubscribeToEvents() => GameService.Instance.EventService.OnMapSelected.AddListener(LoadMap);
 
         private void LoadMap(int mapId)
         {
@@ -77,13 +76,13 @@ namespace ServiceLocator.Map
         {
             Vector3 mousePosition = Camera.main.ScreenToWorldPoint(cursorPosition);
             Vector3Int cellPosition = GetCellPosition(mousePosition);
-            Vector3 cellCenter = GetCenterOfCell(cellPosition);
-
+            Vector3 centerCell = GetCenterOfCell(cellPosition);
+            
             ResetTileOverlay();
 
-            if (CanSpawnOnPosition(cellCenter, cellPosition))
+            if (CanSpawnOnPosition(centerCell, cellPosition))
             {
-                spawnPosition = cellCenter;
+                spawnPosition = centerCell;
                 return true;
             }
             else

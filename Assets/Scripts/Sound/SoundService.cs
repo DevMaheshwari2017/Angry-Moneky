@@ -1,20 +1,19 @@
 using System;
 using UnityEngine;
-using ServiceLocator.Utilities;
 
 namespace ServiceLocator.Sound
 {
     public class SoundService
     {
-       private SoundScriptableObject soundScriptableObject;
-       private AudioSource audioEffects;
-       private AudioSource backgroundMusic;
+        private SoundScriptableObject soundScriptableObject;
+        private AudioSource audioEffects;
+        private AudioSource backgroundMusic;
 
-        public SoundService(SoundScriptableObject soundScriptableObject, AudioSource audioEffects, AudioSource backgroundMusic) 
+        public SoundService(SoundScriptableObject soundScriptableObject, AudioSource audioEffectSource, AudioSource bgMusicSource)
         {
             this.soundScriptableObject = soundScriptableObject;
-            this.audioEffects = audioEffects;
-            this.backgroundMusic = backgroundMusic;
+            audioEffects = audioEffectSource;
+            backgroundMusic = bgMusicSource;
             PlaybackgroundMusic(SoundType.BackgroundMusic, true);
         }
 

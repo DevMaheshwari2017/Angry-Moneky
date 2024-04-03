@@ -20,7 +20,7 @@ namespace ServiceLocator.Player.Projectile
         {
             this.projectilePrefab = projectilePrefab;
             this.projectileScriptableObjects = projectileScriptableObjects;
-            projectileContainer = new GameObject("Projectile Container").transform; ;
+            projectileContainer = new GameObject("Projectile Container").transform;
         }
 
         public ProjectileController GetProjectile(ProjectileType projectileType)

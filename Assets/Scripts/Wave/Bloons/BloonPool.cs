@@ -18,8 +18,8 @@ namespace ServiceLocator.Wave.Bloon
 
         public BloonPool(WaveScriptableObject waveScriptableObject)
         {
-            bloonPrefab = waveScriptableObject.BloonPrefab;
-            bloonScriptableObjects = waveScriptableObject.BloonScriptableObjects;
+            this.bloonPrefab = waveScriptableObject.BloonPrefab;
+            this.bloonScriptableObjects = waveScriptableObject.BloonScriptableObjects;
             bloonContainer = new GameObject("Bloon Container").transform;
         }
 
