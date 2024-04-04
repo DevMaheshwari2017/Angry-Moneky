@@ -110,10 +110,17 @@ namespace ServiceLocator.Wave.Bloon
 
         private bool HasLayeredBloons() => bloonScriptableObject.LayeredBloons.Count > 0;
 
+<<<<<<< Updated upstream
         private void SpawnLayeredBloons() => GameService.Instance.WaveService.SpawnBloons(bloonScriptableObject.LayeredBloons,
                                                                                           bloonView.transform.position,
                                                                                           currentWaypointIndex,
                                                                                           bloonScriptableObject.LayerBloonSpawnRate);
+=======
+        private void SpawnLayeredBloons() => GameService.Instance.StartCoroutine(WaveService.Instance.SpawnBloons(bloonScriptableObject.LayeredBloons,
+                                                                              bloonView.transform.position,
+                                                                              currentWaypointIndex,
+                                                                              bloonScriptableObject.LayerBloonSpawnRate));
+>>>>>>> Stashed changes
 
         public BloonType GetBloonType() => bloonScriptableObject.Type;
 
