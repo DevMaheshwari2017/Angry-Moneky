@@ -35,8 +35,9 @@ namespace ServiceLocator.UI
 
         public void OnDrag(PointerEventData eventData)
         {
-            rectTransform.anchoredPosition += eventData.delta;
-            owner.MonkeyDraggedAt(eventData.position);
+            Vector3 diff = eventData.delta;
+            rectTransform.position += diff;
+            owner.MonkeyDraggedAt(rectTransform.position);
         }
 
         public void OnEndDrag(PointerEventData eventData)
