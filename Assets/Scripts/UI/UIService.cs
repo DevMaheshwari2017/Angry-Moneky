@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using ServiceLocator.Main;
 using ServiceLocator.Wave;
 using ServiceLocator.Events;
+using ServiceLocator.Player;
 using UnityEngine.SceneManagement;
 
 namespace ServiceLocator.UI
@@ -12,6 +13,7 @@ namespace ServiceLocator.UI
     public class UIService : MonoBehaviour
     {
         //Dependencies
+        private PlayerService playerService;
         private WaveService waveService;
         private EventService eventService;
 
@@ -43,9 +45,7 @@ namespace ServiceLocator.UI
 
         private void Start()
         {
-            monkeySelectionController = new MonkeySelectionUIController(cellContainer, monkeyCellPrefab, monkeyCellScriptableObjects);
-            MonkeySelectionPanel.SetActive(false);
-            monkeySelectionController.SetActive(false);
+           
 
             gameplayPanel.SetActive(false);
             levelSelectionPanel.SetActive(true);
@@ -56,12 +56,16 @@ namespace ServiceLocator.UI
             playAgainButton.onClick.AddListener(OnPlayAgainButtonClicked);
         }
 
-        public void Init(WaveService waveService,EventService eventService)
+        public void Init(PlayerService playerService, WaveService waveService,EventService eventService)
         {
+            this.playerService = playerService;
             this.waveService = waveService;
             this.eventService = eventService;
 
             SubscribeToEvents();
+            monkeySelectionController = new MonkeySelectionUIController(playerService, cellContainer, monkeyCellPrefab, monkeyCellScriptableObjects);
+            MonkeySelectionPanel.SetActive(false);
+            monkeySelectionController.SetActive(false);
         }
 
         public void SubscribeToEvents() => eventService.OnMapSelected.AddListener(OnMapSelected);
