@@ -3,14 +3,24 @@ using UnityEngine;
 using ServiceLocator.Wave.Bloon;
 using System.Threading.Tasks;
 using ServiceLocator.Main;
+using ServiceLocator.Map;
+using ServiceLocator.UI;
+using ServiceLocator.Sound;
+using ServiceLocator.Player;
+using ServiceLocator.Events;
 
 namespace ServiceLocator.Wave
 {
     public class WaveService
     {
+        //depedencies
+        private UIService uIService;
+        private SoundService soundService;
+        private MapService mapService;
+        private EventService eventService;
+
         private WaveScriptableObject waveScriptableObject;
         private BloonPool bloonPool;
-
         private int currentWaveId;
         private List<WaveData> waveDatas;
         private List<BloonController> activeBloons;
@@ -18,6 +28,15 @@ namespace ServiceLocator.Wave
         public WaveService(WaveScriptableObject waveScriptableObject)
         {
             this.waveScriptableObject = waveScriptableObject;
+        }
+
+        public void Init(UIService uIService, MapService mapService, SoundService soundService, EventService eventService)
+        {
+            this.eventService = eventService;
+            this.soundService = soundService;
+            this.uIService = uIService;
+            this.mapService = mapService;
+            
             InitializeBloons();
             SubscribeToEvents();
         }
@@ -28,20 +47,20 @@ namespace ServiceLocator.Wave
             activeBloons = new List<BloonController>();
         }
 
-        private void SubscribeToEvents() => GameService.Instance.EventService.OnMapSelected.AddListener(LoadWaveDataForMap);
+        private void SubscribeToEvents() => eventService.OnMapSelected.AddListener(LoadWaveDataForMap);
 
         private void LoadWaveDataForMap(int mapId)
         {
             currentWaveId = 0;
             waveDatas = waveScriptableObject.WaveConfigurations.Find(config => config.MapID == mapId).WaveDatas;
-            GameService.Instance.UIService.UpdateWaveProgressUI(currentWaveId, waveDatas.Count);
+            uIService.UpdateWaveProgressUI(currentWaveId, waveDatas.Count);
         }
 
         public void StarNextWave()
         {
             currentWaveId++;
             var bloonsToSpawn = GetBloonsForCurrentWave();
-            var spawnPosition = GameService.Instance.MapService.GetBloonSpawnPositionForCurrentMap();
+            var spawnPosition = mapService.GetBloonSpawnPositionForCurrentMap();
             SpawnBloons(bloonsToSpawn, spawnPosition, 0, waveScriptableObject.SpawnRate);
         }
 
@@ -51,7 +70,7 @@ namespace ServiceLocator.Wave
             {
                 BloonController bloon = bloonPool.GetBloon(bloonType);
                 bloon.SetPosition(spawnPosition);
-                bloon.SetWayPoints(GameService.Instance.MapService.GetWayPointsForCurrentMap(), startingWaypointIndex);
+                bloon.SetWayPoints(mapService.GetWayPointsForCurrentMap(), startingWaypointIndex);
 
                 AddBloon(bloon);
                 await Task.Delay(Mathf.RoundToInt(spawnRate * 1000));
@@ -70,13 +89,13 @@ namespace ServiceLocator.Wave
             activeBloons.Remove(bloon);
             if (HasCurrentWaveEnded())
             {
-                GameService.Instance.SoundService.PlaySoundEffects(Sound.SoundType.WaveComplete);
-                GameService.Instance.UIService.UpdateWaveProgressUI(currentWaveId, waveDatas.Count);
+               soundService.PlaySoundEffects(Sound.SoundType.WaveComplete);
+               uIService.UpdateWaveProgressUI(currentWaveId, waveDatas.Count);
 
                 if(IsLevelWon())
-                    GameService.Instance.UIService.UpdateGameEndUI(true);
+                    uIService.UpdateGameEndUI(true);
                 else
-                    GameService.Instance.UIService.SetNextWaveButton(true);
+                    uIService.SetNextWaveButton(true);
             }
         }
 
