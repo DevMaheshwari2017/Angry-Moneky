@@ -40,9 +40,8 @@ Angry Monkey is not just a fun and engaging tower defense game but also a testam
 
 ## Preview 
 
-### Web-To-Play : 
+### [Web-To-Play](https://outscal.com/devmaheswari2017/game/play-angry-monkey-v11-game)
 
-https://outscal.com/devmaheswari2017/game/play-angry-monkey-v11-game
 
 ### Gameplay Video :
 
